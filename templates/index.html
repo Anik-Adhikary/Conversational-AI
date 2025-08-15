@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Voice Agent - Conversational AI</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .pulse-ring {
+            animation: pulse-ring 2s cubic-bezier(0.455, 0.03, 0.515, 0.955) infinite;
+        }
+        
+        @keyframes pulse-ring {
+            0% {
+                transform: scale(0.33);
+                opacity: 1;
+            }
+            40%, 50% {
+                opacity: 0.5;
+            }
+            100% {
+                transform: scale(1.2);
+                opacity: 0;
+            }
+        }
+        
+        .recording-animation {
+            animation: recording-pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes recording-pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 0 20px rgba(239, 68, 68, 0);
+            }
+        }
+        
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .glassmorphism {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .chat-message {
+            animation: fadeInUp 0.5s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+
+<body class="gradient-bg min-h-screen flex items-center justify-center p-4">
+    <div class="glassmorphism p-8 md:p-12 rounded-3xl shadow-2xl text-center max-w-4xl w-full mx-4">
+        
+        <!-- Header -->
+        <div class="mb-8">
+            <h1 class="text-5xl font-bold text-white mb-4">
+                🎙️ Voice Agent
+            </h1>
+            <p class="text-xl text-white/80">
+                Have a natural conversation with AI
+            </p>
+        </div>
+
+        <!-- Session Controls -->
+        <div class="flex justify-center gap-4 mb-8">
+            <button id="newSessionBtn" class="bg-white/20 hover:bg-white/30 text-white py-2 px-6 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm">
+                🆕 New Session
+            </button>
+            <button id="clearHistoryBtn" class="bg-white/20 hover:bg-white/30 text-white py-2 px-6 rounded-full shadow-lg transition-all duration-300 transform hover:scale-105 backdrop-blur-sm">
+                🗑️ Clear History
+            </button>
+        </div>
+
+        <!-- Chat History -->
+        <div id="chatHistory" class="mb-8 max-h-80 overflow-y-auto bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20 text-left">
+            <div class="text-white/60 italic text-center flex items-center justify-center h-20">
+                <div class="text-lg">Start a conversation by pressing the record button below</div>
+            </div>
+        </div>
+
+        <!-- Voice Visualizer -->
+        <div class="mb-8">
+            <canvas id="chatVisualizer" width="600" height="120" class="w-full hidden rounded-2xl bg-white/5 shadow-inner border border-white/20"></canvas>
+        </div>
+
+        <!-- Main Record Button -->
+        <div class="flex justify-center mb-8">
+            <div class="relative">
+                <!-- Pulse rings for recording state -->
+                <div id="pulseRing1" class="absolute inset-0 rounded-full bg-red-400 pulse-ring hidden"></div>
+                <div id="pulseRing2" class="absolute inset-0 rounded-full bg-red-400 pulse-ring hidden" style="animation-delay: 0.5s;"></div>
+                <div id="pulseRing3" class="absolute inset-0 rounded-full bg-red-400 pulse-ring hidden" style="animation-delay: 1s;"></div>
+                
+                <button id="mainRecordBtn" class="relative w-32 h-32 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white rounded-full shadow-2xl transition-all duration-300 transform hover:scale-105 flex items-center justify-center text-2xl font-bold">
+                    <span id="recordIcon">🎙️</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Status -->
+        <div id="statusContainer" class="mb-6">
+            <p id="chatStatus" class="text-lg font-semibold text-white/90 hidden"></p>
+        </div>
+
+        <!-- Hidden Audio Player -->
+        <audio id="chatResponseAudio" class="hidden" autoplay></audio>
+
+        <!-- Instructions -->
+        <div class="mt-8 p-6 bg-white/10 backdrop-blur-sm rounded-2xl border border-white/20">
+            <h3 class="text-xl font-semibold text-white mb-3">💡 How to use</h3>
+            <div class="text-white/80 text-left space-y-2">
+                <p>• Click the record button to start speaking</p>
+                <p>• The AI will respond and automatically start listening again</p>
+                <p>• Click again to stop recording at any time</p>
+                <p>• Use "New Session" to start fresh or "Clear History" to reset</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="{{ url_for('static', path='script.js') }}"></script>
+</body>
+</html>
